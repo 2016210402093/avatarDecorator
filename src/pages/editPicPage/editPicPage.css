@@ -1,0 +1,21 @@
+.editPic {
+    position: relative !important;
+    border: 2px solid orange;
+    width: calc(80% - 4px);
+    height: 60%;
+    margin: 10% auto;
+    overflow: hidden;
+    background-position: center !important;
+    background-size: contain !important;
+}
+
+.editArea {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.chosenArea {
+    background-color:rgba(207, 207, 207, 0.5);
+    border: 2px solid white;
+}

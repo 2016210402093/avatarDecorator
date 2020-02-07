@@ -1,0 +1,49 @@
+.choseArea {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow {
+    width: 12%;
+    flex: 1 1 auto;
+}
+
+
+.arrow:hover {
+    cursor: pointer;
+}
+
+.picDisplay {
+    width: 72%;
+    height: 100px;
+    flex: 5 1 auto;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imgs {
+    height: 70px;
+    width: 70px;
+    margin: 0 2%;
+    border-radius: 10px;
+    flex: none;
+    box-shadow: 0 0 5px black;
+    transition: all 0.3s ease;
+}
+
+.imgs:hover {
+    transform: scale(1.03) rotate(5deg) !important;
+    opacity: 0.9 !important;
+    box-shadow: 0 0 10px red !important;
+    cursor: pointer;
+}
+
+.pad {
+    height: 70px;
+    width: 1px;
+    flex: none;
+}

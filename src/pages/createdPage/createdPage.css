@@ -1,0 +1,36 @@
+.createdPage {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.shadowBox {
+    box-shadow: -10px 10px 10px #888888;
+    margin-bottom: 30px;
+}
+
+.createdImg {
+    background-color: white;
+    flex: none;
+    width: 280px;
+    height: 280px;
+    border: 10px solid #4D4D4D;
+    box-shadow: inset -1px 1px 6px 1px rgba(0, 0, 0, 0.45);
+}
+
+.createdImg img{
+    width: 250px;
+    height: 250px;
+    padding: 15px;
+}
+
+.reminder {
+    margin: 5px 0;
+    color: red;
+    font-size: 20px;
+    font-weight: bolder;
+    
+}

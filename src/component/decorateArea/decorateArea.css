@@ -1,0 +1,60 @@
+.title {
+    margin: 0 0 15px 0;
+    padding: 20px ;
+    text-align: center;
+    font-family: FZShuTi;
+    color: orangered;
+    text-shadow: 0 0 3px yellow;
+}
+
+.picInput {
+    position: absolute;
+    left: 0;
+    top:0;
+    opacity: 0;
+    width: 250px;
+    height: 250px;
+}
+
+.addPic {
+    position: relative !important;
+    background-size: contain !important;
+    background-position: center !important;
+    height: 100%;
+    width: 100%;
+}
+
+.picBox {
+    margin: 0 auto;
+    width:250px;
+    height: 250px;
+    border: 2px yellow dashed;
+    display: flex;
+    display: -webkit-flex; /* Safari */
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.picBox :hover {
+    cursor: pointer;
+}
+
+
+.tips {
+    margin: 25px 0;
+    text-align: center;
+    font-size: 14px;
+    color: dimgrey;
+}
+
+
+.chosenBox {
+    width: 70px;
+    height: 70px;
+}
+
+.picList {
+    background-size: 100% 100% !important;
+    background-position: center !important;
+}
