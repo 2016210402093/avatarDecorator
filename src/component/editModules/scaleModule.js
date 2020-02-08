@@ -16,18 +16,14 @@ import {checkMode} from './common'
 
 6.targetWidth: 目标模块宽度
 
-7.scaleX: 当前模块X轴偏移
+7.isCheck: 是否执行超出边界判断
 
-8.scaleY: 当前模块Y轴偏移
-
-9.isCheck: 是否执行超出边界判断
-
-10.callback: 执行move事件时的回调 
+8.callback: 执行move事件时的回调 
 
 */
 
 export default class ScaleModule {
-    constructor(event, areaHeight, areaWidth, origin, targetHeight, targetWidth, scaleX, scaleY, isCheck, callback){
+    constructor(event, areaHeight, areaWidth, origin, targetHeight, targetWidth, isCheck, callback){
         this.event = event;                //事件
 
         this.callback = callback;          //移动事件时的回调函数
@@ -41,9 +37,6 @@ export default class ScaleModule {
         this.targetWidth = targetWidth;    //目标模块宽度
 
         this.isCheck = isCheck;            //是否执行超出边界判断
-
-        this.scaleX = scaleX;                   //当前模块X轴偏移
-        this.scaleY = scaleY;                   //当前模块Y轴偏移
     }
 
     scaleDown (){
@@ -61,13 +54,13 @@ export default class ScaleModule {
     scaleMove = (e)=>{
         let {event} = checkMode(e);
 
-        //超出边界判断
-        if(this.isCheck){
-            if(event.clientX>this.origin[0]+this.areaWidth+10 || event.clientY>this.origin[1]+this.areaHeight+10){
-                this.scaleUp();
-                return
-            }
-        }
+        // //超出边界判断
+        // if(this.isCheck){
+        //     if(event.clientX>this.origin[0]+this.areaWidth+10 || event.clientY>this.origin[1]+this.areaHeight+10){
+        //         this.scaleUp();
+        //         return
+        //     }
+        // }
 
         //公式:原长+目前位置长度-起始点长度
         let width = this.targetWidth+event.clientX-this.scaleX;
@@ -76,7 +69,7 @@ export default class ScaleModule {
         //若长宽小于零,则不允许缩小
         if(width<0) width = 0;
         if(height<0) height = 0;
-
+        
         //更新起始点
         this.scaleX = event.clientX;
         this.scaleY = event.clientY;

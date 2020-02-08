@@ -92,8 +92,6 @@ class EditPicPage extends Component {
             this.origin,
             this.state.style.width,
             this.state.style.height,
-            this.state.needX+this.state.style.width,
-            this.state.needY+this.state.style.height,
             false,
             (width, height)=>{
                 //生成正方形区域

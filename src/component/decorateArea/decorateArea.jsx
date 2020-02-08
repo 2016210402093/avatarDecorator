@@ -174,11 +174,9 @@ export default class DecorateArea extends Component{
             this.areaHeight,
             this.areaWidth,
             this.origin,
-            this.state.chosenPicSet[key].style.width,
             this.state.chosenPicSet[key].style.height,
-            this.state.chosenPicSet[key].needX+this.state.chosenPicSet[key].style.width,
-            this.state.chosenPicSet[key].needY+this.state.chosenPicSet[key].style.height,
-            true,
+            this.state.chosenPicSet[key].style.width,
+            false,
             (width, height)=>{
                 let [...chosenPicSet] = this.state.chosenPicSet;
                 chosenPicSet[key].style = Object.assign({}, this.state.chosenPicSet[key].style, {width: width}, {height: height})
