@@ -16,14 +16,16 @@ import {checkMode} from './common'
 
 6.targetWidth: 目标模块宽度
 
-7.isCheck: 是否执行超出边界判断
+7.rotateAngle: 目标被已旋转角度
 
-8.callback: 执行move事件时的回调 
+8.isCheck: 是否执行超出边界判断
+
+9.callback: 执行move事件时的回调 
 
 */
 
 export default class ScaleModule {
-    constructor(event, areaHeight, areaWidth, origin, targetHeight, targetWidth, isCheck, callback){
+    constructor(event, areaHeight, areaWidth, origin, targetHeight, targetWidth, rotateAngle, isCheck, callback){
         this.event = event;                //事件
 
         this.callback = callback;          //移动事件时的回调函数
@@ -35,6 +37,8 @@ export default class ScaleModule {
 
         this.targetHeight = targetHeight;  //目标模块高度
         this.targetWidth = targetWidth;    //目标模块宽度
+
+        this.rotateAngle = rotateAngle<0 ?rotateAngle+360: rotateAngle;    //目标旋转角度
 
         this.isCheck = isCheck;            //是否执行超出边界判断
     }
@@ -63,8 +67,18 @@ export default class ScaleModule {
         // }
 
         //公式:原长+目前位置长度-起始点长度
-        let width = this.targetWidth+event.clientX-this.scaleX;
-        let height =  this.targetHeight+event.clientY-this.scaleY;
+        let width, height;
+
+        if(this.rotateAngle === 0) {
+            width = this.targetWidth+event.clientX-this.scaleX;
+            height =  this.targetHeight+event.clientY-this.scaleY;
+        }
+        else {
+            let temp = this.calcWH(event.clientX-this.scaleX, event.clientY-this.scaleY);
+
+            width = this.targetWidth+temp.x;
+            height =  this.targetHeight+temp.y;
+        }
 
         //若长宽小于零,则不允许缩小
         if(width<0) width = 0;
@@ -79,6 +93,35 @@ export default class ScaleModule {
         this.targetHeight = height;
 
         this.callback(this.targetWidth, this.targetHeight);
+    }
+
+    //计算旋转后的长宽
+    calcWH(x, y) {
+        if(x===0 && y===0) return {x:0, y:0}
+
+        //计算初始角度
+        let angle0 = Math.atan(y/x);
+
+        //第二象限
+        if(x<0 && y>=0){
+            angle0 = Math.PI+angle0;
+        }
+        //第四象限
+        else if(x>=0 && y<0){
+            angle0 = 2*Math.PI+angle0;
+        }
+        
+
+        let len = Math.sqrt(x**2+y**2);
+
+        //计算旋转后的角度
+        let angle1 = angle0-this.rotateAngle/180*Math.PI;
+
+        //第三象限
+        if(x<0 && y<0) return {x: -len*Math.cos(angle1), y: -len*Math.sin(angle1)}
+
+        return {x: len*Math.cos(angle1), y: len*Math.sin(angle1)}
+
     }
 
     scaleUp = ()=>{

@@ -14,6 +14,12 @@ class CreatedPage extends Component {
         } 
     }
 
+    componentDidMount(){
+        if(localStorage.getItem('picUrl') === null){
+            this.props.history.push('/');
+        }
+    }
+
     continueCreate = ()=>{
         const {dispatch} = this.props; 
 

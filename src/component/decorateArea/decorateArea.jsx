@@ -176,6 +176,7 @@ export default class DecorateArea extends Component{
             this.origin,
             this.state.chosenPicSet[key].style.height,
             this.state.chosenPicSet[key].style.width,
+            this.state.chosenPicSet[key].angle,
             false,
             (width, height)=>{
                 let [...chosenPicSet] = this.state.chosenPicSet;

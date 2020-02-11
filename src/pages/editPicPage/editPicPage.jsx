@@ -39,6 +39,10 @@ class EditPicPage extends Component {
     }
 
     componentDidMount(){
+        if(localStorage.getItem('picUrl') === null){
+            this.props.history.push('/');
+        }
+
         this.setState({
             backgroundImage: localStorage.getItem('picUrl')
         })
@@ -92,6 +96,7 @@ class EditPicPage extends Component {
             this.origin,
             this.state.style.width,
             this.state.style.height,
+            0,
             false,
             (width, height)=>{
                 //生成正方形区域

@@ -41,7 +41,7 @@ export default class RotateModule {
         isTouch ? document.ontouchmove = this.roateMove : document.onmousemove = this.roateMove;
 
         //定义抬起事件
-        isTouch ? document.touchend = this.roateMove: document.onmouseup = this.roateMove;   
+        isTouch ? document.touchend = this.roateUp: document.onmouseup = this.roateUp;   
     }
 
     //箭头函数,防止this访问不到
