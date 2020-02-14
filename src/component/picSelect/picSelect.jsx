@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PicSelectUI from './picSelectUI'
-import './picSelect.css'
 import {updatePicUrlAction} from '../../action/actionCreators'
 import { connect } from 'react-redux';
 

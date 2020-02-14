@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import './createdPage.css'
+import css from './createdPage.module.css'
 import { Redirect } from 'react-router-dom';
 import {isEditAction} from '../../action/actionCreators'
 import { connect } from 'react-redux';
@@ -37,16 +37,16 @@ class CreatedPage extends Component {
             return <Redirect push to='/'></Redirect>
         }
         return (
-            <div className='createdPage'>
-                <div className="shadowBox">
-                    <div className='createdImg'>
+            <div className={css.createdPage}>
+                <div className={css.shadowBox}>
+                    <div className={css.createdImg}>
                         <img alt={'刷新后请重新生成图片'} src={localStorage.getItem('picUrl')}></img>
                     </div>
                 </div>
 
-                <p className='reminder'>生成成功!</p>
-                <p className='reminder'>PC端用户右键保存</p>
-                <p className='reminder'>移动端用户长按保存</p>
+                <p className={css.reminder}>生成成功!</p>
+                <p className={css.reminder}>PC端用户右键保存</p>
+                <p className={css.reminder}>移动端用户长按保存</p>
 
                 <button className='getAvatar' onClick={ ()=>this.continueCreate() }> 继续生成 </button>
 

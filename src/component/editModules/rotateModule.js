@@ -18,7 +18,7 @@ import {checkMode} from './common'
 
 
 export default class RotateModule {
-    constructor(event, center, start, origin, callback) {
+    constructor({event, center, start, origin, callback}) {
         this.event = event;          //事件
 
         this.callback = callback;    //移动事件时的回调函数

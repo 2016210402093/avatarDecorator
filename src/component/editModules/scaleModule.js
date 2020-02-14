@@ -2,7 +2,7 @@ import {checkMode} from './common'
 
 /*
 
-需传入以下十个参数
+需传入以下九个参数
 
 1.event: 事件
 
@@ -25,7 +25,7 @@ import {checkMode} from './common'
 */
 
 export default class ScaleModule {
-    constructor(event, areaHeight, areaWidth, origin, targetHeight, targetWidth, rotateAngle, isCheck, callback){
+    constructor({event, areaHeight, areaWidth, origin, targetHeight, targetWidth, rotateAngle = 0, isCheck = false, callback}){
         this.event = event;                //事件
 
         this.callback = callback;          //移动事件时的回调函数

@@ -1,0 +1,60 @@
+.choseArea { /* Safari */
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+            justify-content: center;
+}
+
+.arrow {
+    width: 12%;
+    -webkit-box-flex: 1;
+            flex: 1 1 auto;
+}
+
+
+.arrow:hover {
+    cursor: pointer;
+}
+
+.picDisplay {
+    width: 72%;
+    height: 100px;
+    -webkit-box-flex: 5;
+            flex: 5 1 auto;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+            align-items: center;
+    overflow: hidden;
+}
+
+.imgs {
+    height: 70px;
+    width: 70px;
+    margin: 0 2%;
+    border-radius: 10px;
+    -webkit-box-flex: 0;
+            flex: none;
+    box-shadow: 0 0 5px black;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.imgs:hover {
+    -webkit-transform: scale(1.03) rotate(5deg) !important;
+            transform: scale(1.03) rotate(5deg) !important;
+    opacity: 0.9 !important;
+    box-shadow: 0 0 10px red !important;
+    cursor: pointer;
+}
+
+.pad {
+    height: 70px;
+    width: 1px;
+    -webkit-box-flex: 0;
+            flex: none;
+}
+

@@ -1,21 +1,22 @@
 import React from 'react'
+import css from './decorateArea.module.css'
 
 const DecorateAreaUI = (props)=>{
     return (
         <div>
-            <h1 className='title'>
+            <h1 className={css.title}>
                 头像编辑器
             </h1>
-            <div className='picBox'>
-                <div id='picInput' style={{background: `url(${props.backgroundImage}) no-repeat`}} className='addPic'>
+            <div className={css.picBox}>
+                <div id='picInput' style={{background: `url(${props.backgroundImage}) no-repeat`}} className={css.addPic}>
 
 
-                <input className='picInput' type='file' accept="image/*" onChange={(e)=>props.changePic(e)}></input>
+                <input className={css.picInput} type='file' accept="image/*" onChange={(e)=>props.changePic(e)}></input>
                     {
                         props.chosenPicSet.map((element, key)=>
-                            <div className='chosenBox' key={key}>
+                            <div className={css.chosenBox} key={key}>
 
-                                <div className="picList" style={{
+                                <div className={css.picList} style={{
                                             position: 'absolute',
                                             display: element.display,
                                             width: element.style.width+'px',
@@ -26,6 +27,8 @@ const DecorateAreaUI = (props)=>{
                                             background: `url(${require('../../'+element.picUrl)}) no-repeat`,
                                             backgroundSize: 'contain', 
                                             transform:`rotate(${element.angle}deg)`,
+                                            WebkitTransform: `rotate(${element.angle}deg)`,
+                                            WebkitTransition: 'all',
                                             transition:'all'
                                         }} 
                                         onMouseDown={(e)=>props.fnDown(e, key)} 

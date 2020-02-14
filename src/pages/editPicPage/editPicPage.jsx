@@ -1,12 +1,12 @@
 import React,{Component} from 'react'
-import './editPicPage.css'
-import '../homePage/homePage.css'
+import css from './editPicPage.module.css'
 import  html2Canvas from 'html2canvas'
-import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom'
 import {isEditAction} from '../../action/actionCreators'
-import MoveModule from '../../component/editModules/moveModule';
-import ScaleModule from '../../component/editModules/scaleModule';
+import MoveModule from '../../component/editModules/moveModule'
+import ScaleModule from '../../component/editModules/scaleModule'
 import {connect} from 'react-redux'
+import compressImg from '../../component/compressImg'
 
 class EditPicPage extends Component {
 
@@ -46,7 +46,7 @@ class EditPicPage extends Component {
         this.setState({
             backgroundImage: localStorage.getItem('picUrl')
         })
-        let element = document.getElementsByClassName('editPic')[0];
+        let element = document.getElementsByClassName(css.editPic)[0];
         this.areaHeight = element.offsetHeight;
         this.areaWidth = element.offsetWidth;
         this.origin = [0, 0];
@@ -63,25 +63,28 @@ class EditPicPage extends Component {
             return;
         }
 
-        let move = new MoveModule(e,(needX, needY)=>{
-            //超出边界判断
-            if(needX<this.origin[0]){
-                needX = this.origin[0];
-            }
-            else if(needX>this.origin[0]+this.areaWidth-this.state.style.width-2){
-                needX = this.origin[0]+this.areaWidth-this.state.style.width-2;
-            }
-            else if(needY<this.origin[1]){
-                needY = this.origin[1];
-            }
-            else if(needY>this.origin[1]+this.areaHeight-this.state.style.height-2){
-                needY = this.origin[1]+this.areaHeight-this.state.style.height-2;
-            }
+        let move = new MoveModule({
+            event: e, 
+            callback: (needX, needY)=>{
+                //超出边界判断
+                if(needX<this.origin[0]+2){
+                    needX = this.origin[0]+2;
+                }
+                if(needX>this.origin[0]+this.areaWidth-this.state.style.width-4){
+                    needX = this.origin[0]+this.areaWidth-this.state.style.width-4;
+                }
+                if(needY<this.origin[1]-2){
+                    needY = this.origin[1]-2;
+                }
+                if(needY>this.origin[1]+this.areaHeight-this.state.style.height-4){
+                    needY = this.origin[1]+this.areaHeight-this.state.style.height-4;
+                }
 
-            this.setState({
-                needX:needX,
-                needY:needY
-            });
+                this.setState({
+                    needX:needX,
+                    needY:needY
+                });
+            }
         })
 
         move.down();
@@ -89,16 +92,16 @@ class EditPicPage extends Component {
 
 
     scaleDown = (e)=>{
-        let scale = new ScaleModule(
-            e,
-            this.areaHeight,
-            this.areaWidth,
-            this.origin,
-            this.state.style.width,
-            this.state.style.height,
-            0,
-            false,
-            (width, height)=>{
+        let scale = new ScaleModule({
+            event: e,
+            areaHeight: this.areaHeight,
+            areaWidth: this.areaWidth,
+            origin: this.origin,
+            targetHeight: this.state.style.height,
+            targetWidth: this.state.style.width,
+            rotateAngle: 0,
+            isCheck: false,
+            callback: (width, height)=>{
                 //生成正方形区域
                 let len = Math.max(width,height)
 
@@ -109,12 +112,16 @@ class EditPicPage extends Component {
                     return
                 }
 
+                if(len>this.areaWidth-4){
+                    len = this.areaWidth-4;
+                }
+
                 let style = Object.assign({}, this.state.style, {width: len}, {height: len})
                 this.setState({
                     style: style
                 })
             }
-        )
+        })
         scale.scaleDown();
     }
   
@@ -123,29 +130,38 @@ class EditPicPage extends Component {
     getChosenPic = ()=>{
         const {dispatch} = this.props;
 
-        let element = document.getElementsByClassName('editPic')[0];
+        let element = document.getElementsByClassName(css.editPic)[0];
         this.refs.chosenArea.style.display = 'none'
         html2Canvas(document.getElementById('chosenArea'),{
-            x: this.state.needX + element.getBoundingClientRect().left,
-            y: this.state.needY + element.getBoundingClientRect().top,
-            width: this.state.style.width,
-            height: this.state.style.height,
+            scale: 4,
+            x: this.state.needX + element.getBoundingClientRect().left+2,
+            y: this.state.needY + element.getBoundingClientRect().top+2,
+            width: this.state.style.width-2,
+            height: this.state.style.height-2,
             useCORS: true
         }).then((canvas)=>{
             let context = canvas.getContext('2d');
-            // 【重要】关闭抗锯齿
+            // 关闭抗锯齿
             context.mozImageSmoothingEnabled = false;
             context.webkitImageSmoothingEnabled = false;
             context.msImageSmoothingEnabled = false;
             context.imageSmoothingEnabled = false;
-            
-            localStorage.setItem('picUrl', canvas.toDataURL());
 
-            this.setState({
-                isGotten: true
-            });
-            const action = isEditAction(true, '', 'inline')
-            dispatch(action);
+            let url = canvas.toDataURL();
+            //图片压缩
+            compressImg({
+                picUrl: url,
+                imgWidth: 250,
+                imgHeight: 250
+            }).then((compressUrl)=>{
+                localStorage.setItem('picUrl', compressUrl);
+
+                this.setState({
+                    isGotten: true
+                });
+                const action = isEditAction(true, '', 'inline')
+                dispatch(action);
+            })
         });
     }
 
@@ -156,16 +172,15 @@ class EditPicPage extends Component {
         }
 
         return (
-            <div className='editArea'>
-                <div id='chosenArea'  className='editPic' style={{background: `url(${this.state.backgroundImage}) no-repeat`}}>
-                    <div ref='chosenArea'  className='chosenArea' 
+            <div className={css.editArea}>
+                <div id='chosenArea'  className={css.editPic} style={{background: `url(${this.state.backgroundImage}) no-repeat`}}>
+                    <div ref='chosenArea'  className={css.chosenArea}
                         style={{
                             position: 'absolute',
                             width: this.state.style.width+'px',
                             height: this.state.style.height+'px',
                             left: this.state.needX,
                             top: this.state.needY,
-                            transition:'all'
                         }} 
                         onMouseDown={(e)=>this.fnDown(e)} 
                         onTouchStart={(e)=>{this.fnDown(e)}}

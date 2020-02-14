@@ -12,7 +12,7 @@ import {checkMode} from './common'
 */
 
 export default class MoveModule {
-    constructor(event, callback){
+    constructor({event, callback}){
         this.event = event;        //事件
 
         this.disX = 0;             //按下的地方距离元素左侧和上侧的距离

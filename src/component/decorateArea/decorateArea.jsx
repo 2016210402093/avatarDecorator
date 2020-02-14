@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import DecorateAreaUI from './decorateAreaUI'
-import './decorateArea.css'
+import css from './decorateArea.module.css'
 import { Redirect } from 'react-router-dom';
 import  html2Canvas from 'html2canvas'
 import store from '../../store'
 import MoveModule from '../editModules/moveModule';
 import RotateModule from '../editModules/rotateModule';
 import ScaleModule from '../editModules/scaleModule';
+import compressImg from '../compressImg'
 
 
 export default class DecorateArea extends Component{
@@ -44,7 +45,7 @@ export default class DecorateArea extends Component{
             this.setState({
                 backgroundImage: backgroundImage
             }, ()=>{
-                let element = document.getElementsByClassName('picBox')[0];
+                let element = document.getElementsByClassName(css.picBox)[0];
                 this.areaHeight = element.offsetHeight;
                 this.areaWidth = element.offsetWidth;
                 this.origin = [element.getBoundingClientRect().left, element.getBoundingClientRect().top];
@@ -84,19 +85,30 @@ export default class DecorateArea extends Component{
                 cancelDecoration: info.cancelDecoration
             }, ()=>{
                 html2Canvas(document.getElementById('picInput'), {
-                    useCORS: true
+                    useCORS: true,
+                    scale: 4
                 }).then((canvas)=>{
                     let context = canvas.getContext('2d');
-                    // 【重要】关闭抗锯齿
+                    // 关闭抗锯齿
                     context.mozImageSmoothingEnabled = false;
                     context.webkitImageSmoothingEnabled = false;
                     context.msImageSmoothingEnabled = false;
                     context.imageSmoothingEnabled = false;
-                    const imgUrl = canvas.toDataURL();
-                    localStorage.setItem('picUrl', imgUrl)
-                    this.setState({
-                        isCreated: true
+
+                    let url = canvas.toDataURL();
+
+                    //图片压缩
+                    compressImg({
+                        picUrl: url,
+                        imgWidth: 250,
+                        imgHeight: 250
+                    }).then((compressUrl)=>{
+                        localStorage.setItem('picUrl', compressUrl)
+                        this.setState({
+                            isCreated: true
+                        })
                     })
+
                 })
             });
         }
@@ -137,14 +149,17 @@ export default class DecorateArea extends Component{
             return;
         }
 
-        let move = new MoveModule(e, (left, top)=>{
-            let [...chosenPicSet] = this.state.chosenPicSet;
-            chosenPicSet[key].needX = left;
-            chosenPicSet[key].needY = top; 
+        let move = new MoveModule({
+            event: e,
+            callback:(left, top)=>{
+                let [...chosenPicSet] = this.state.chosenPicSet;
+                chosenPicSet[key].needX = left;
+                chosenPicSet[key].needY = top; 
 
-            this.setState({
-                chosenPicSet: chosenPicSet
-            });
+                this.setState({
+                    chosenPicSet: chosenPicSet
+                });
+            }
         });
 
         move.down()
@@ -155,13 +170,19 @@ export default class DecorateArea extends Component{
         this.center = [this.state.chosenPicSet[key].needX+this.state.chosenPicSet[key].style.width/2, this.state.chosenPicSet[key].needY+this.state.chosenPicSet[key].style.height/2];
         this.start = [this.state.chosenPicSet[key].needX+this.state.chosenPicSet[key].style.width+20, this.state.chosenPicSet[key].needY+this.state.chosenPicSet[key].style.height/2];
 
-        let rotate = new RotateModule(e, this.center, this.start, this.origin, (angle)=>{
-            let [...chosenPicSet] = this.state.chosenPicSet;
-            chosenPicSet[key].angle = angle;
+        let rotate = new RotateModule({
+            event: e,
+            center: this.center,
+            start: this.start,
+            origin: this.origin,
+            callback: (angle)=>{
+                let [...chosenPicSet] = this.state.chosenPicSet;
+                chosenPicSet[key].angle = angle;
 
-            this.setState({
-                chosenPicSet: chosenPicSet
-            });
+                this.setState({
+                    chosenPicSet: chosenPicSet
+                });
+            }
         });
 
         rotate.roateDown();
@@ -169,16 +190,16 @@ export default class DecorateArea extends Component{
 
     scaleDown = (e, key)=>{
     
-        let scale = new ScaleModule(
-            e,
-            this.areaHeight,
-            this.areaWidth,
-            this.origin,
-            this.state.chosenPicSet[key].style.height,
-            this.state.chosenPicSet[key].style.width,
-            this.state.chosenPicSet[key].angle,
-            false,
-            (width, height)=>{
+        let scale = new ScaleModule({
+            event: e,
+            areaHeight: this.areaHeight,
+            areaWidth: this.areaWidth,
+            origin: this.origin,
+            targetHeight: this.state.chosenPicSet[key].style.height,
+            targetWidth: this.state.chosenPicSet[key].style.width,
+            rotateAngle: this.state.chosenPicSet[key].angle,
+            isCheck: false,
+            callback: (width, height)=>{
                 let [...chosenPicSet] = this.state.chosenPicSet;
                 chosenPicSet[key].style = Object.assign({}, this.state.chosenPicSet[key].style, {width: width}, {height: height})
 
@@ -186,7 +207,7 @@ export default class DecorateArea extends Component{
                     chosenPicSet: chosenPicSet
                 })
             }
-        )
+        })
 
         scale.scaleDown();
 

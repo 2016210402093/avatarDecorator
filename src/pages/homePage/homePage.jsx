@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import DecorateArea from '../../component/decorateArea/decorateArea'
 import PicSelect from '../../component/picSelect/picSelect'
-import './homePage.css'
 import {cancelDecorationAction} from '../../action/actionCreators'
 import {connect} from 'react-redux'
 
@@ -20,6 +19,8 @@ class HomePage extends Component {
     }
 
     render(){
+
+
         this.isEdit = this.props.isEdit
 
         return (
